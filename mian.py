@@ -1,15 +1,15 @@
 import pyttsx3
 import PyPDF2
+from tkinter.filedialog import *
 
-book = open('HTRPLAB.pdf', 'rb')
-pdfRead = PyPDF2.PdfReader(book) 
-num_pages = len(pdfRead.pages)
+book = askopenfilename()
+pdfReader = PyPDF2.PdfReader(book)
+page_num = len(pdfReader.pages)
 
-speaker = pyttsx3.init()
-page = pdfRead.pages[8]
-text = page.extract_text()
-print(text)
-speaker.say(text)
-speaker.runAndWait()
-print(num_pages)
-
+for num in range(0, page_num):
+    page = pdfReader.pages[num]
+    text = page.extract_text()
+    player = pyttsx3.init()
+    player.say(text)
+    player.runAndWait()
+    
