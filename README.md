@@ -26,6 +26,15 @@ python main.py                  # or: python main.py path\to\book.pdf
 
 Readout uses your system's speech voices (SAPI5 on Windows, NSSpeechSynthesizer on macOS, eSpeak on Linux). To get more voices on Windows, go to *Settings → Time & language → Speech → Add voices*.
 
+## Building the Windows app
+
+```bash
+pip install pyinstaller
+pyinstaller readout.spec --noconfirm
+```
+
+This creates `dist/Readout/Readout.exe`. Zip the whole `dist/Readout` folder to share it; it runs without Python installed. To change the icon, edit and run `python assets/make_icon.py`.
+
 ## Keyboard shortcuts
 
 | Key | Action |

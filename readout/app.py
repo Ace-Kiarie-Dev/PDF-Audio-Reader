@@ -3,6 +3,7 @@
 import bisect
 import os
 import queue
+import sys
 import threading
 import time
 import tkinter as tk
@@ -38,6 +39,12 @@ PAD = 28
 SLEEP_CHOICES = ["Off", "End of page", "5 min", "15 min", "30 min", "60 min"]
 
 
+def _resource(*parts):
+    """Path to a bundled file, both from source and inside a PyInstaller build."""
+    base = getattr(sys, "_MEIPASS", os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    return os.path.join(base, *parts)
+
+
 def _clamp(v, lo, hi):
     return max(lo, min(hi, v))
 
@@ -60,6 +67,10 @@ class ReadoutApp(ctk.CTk):
         self.title("Readout")
         self.geometry("1320x860")
         self.minsize(980, 640)
+        try:
+            self.iconbitmap(_resource("assets", "readout.ico"))
+        except tk.TclError:
+            pass
 
         self.store = Store()
         self.events = queue.Queue()
@@ -414,7 +425,8 @@ class ReadoutApp(ctk.CTk):
         self.go_to_page(page, token)
         self._remember(save=True)
         self._refresh_library()
-        self._set_status("Resumed where you left off" if (page or token) else f"{doc.page_count} pages")
+        count = f"{doc.page_count} page" + ("s" if doc.page_count != 1 else "")
+        self._set_status("Resumed where you left off" if (page or token) else count)
 
     def _start_word_count(self, doc):
         path, password = doc.path, doc.password
